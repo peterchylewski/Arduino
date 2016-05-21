@@ -1,0 +1,17 @@
+# Class
+
+PT2314		KEYWORD1
+
+
+
+# Functions
+
+PT2314Write	KEYWORD2
+
+setVolume	KEYWORD2
+
+setBass		KEYWORD2
+
+setTreble	KEYWORD2
+
+setBalance	KEYWORD2
