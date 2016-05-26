@@ -27,14 +27,14 @@ Button button = Button(BUTTON, PULLUP);
 
 // Which pin on the Arduino is connected to the NeoPixels?
 #define PIXEL_PIN     5
-#define NUMPIXELS     8
+#define NUMPIXELS     12
 
 // When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
 // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
 // example for more information on possible values.
 Adafruit_NeoPixel pixels = Adafruit_NeoPixel(NUMPIXELS, PIXEL_PIN, NEO_GRB + NEO_KHZ800);
 
-int delayval = 20; // delay for half a second
+int delayval = 20;
 
 int r = 127;
 int g = 127;
@@ -53,10 +53,12 @@ struct MyObject {
 };
 
 void setup() {
-  Serial.begin(57600);
+  Serial.begin(9600);
   pixels.begin(); // This initializes the NeoPixel library.
+  
   retreiveRGB();
   showRGB();
+
 }
 
 void loop() {
@@ -178,6 +180,7 @@ void loop() {
 
 void showRGB() {
   for (int i = 0; i < NUMPIXELS; i++) {
+    //Serial.print("i: "); Serial.println(i);
     pixels.setPixelColor(i, pixels.Color(r, g, b));
   }
   pixels.show();

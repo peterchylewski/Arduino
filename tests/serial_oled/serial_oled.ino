@@ -9,16 +9,18 @@ Adafruit_SSD1306 display(OLED_RESET);
 String inputString = "";
 boolean stringComplete = false;
 
+int incomingByte = 0;   // for incoming serial data
+
 void setup() {
 
   Serial.begin(9600);
   Serial.print("Start");
-  
+
   inputString.reserve(200);
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();   // clears the screen and buffer
-  display.setTextSize(8);
+  display.setTextSize(1);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   display.print("FOO");
@@ -27,8 +29,9 @@ void setup() {
 
 void loop() {
 
-
-  if (Serial.available()) {
+  
+  
+  if (Serial.available() > 0) {
     // get the new byte:
     char inChar = (char)Serial.read();
     // add it to the inputString:
@@ -41,12 +44,15 @@ void loop() {
       display.clearDisplay();
       display.setCursor(0, 0);
       display.print(inputString);
-      display.display();     // show splashscreen
+      display.display();
 
       inputString = "";
-       stringComplete = false;
+      stringComplete = false;
+
+      Serial.println("OK");
     }
   }
+  
 }
 
 
