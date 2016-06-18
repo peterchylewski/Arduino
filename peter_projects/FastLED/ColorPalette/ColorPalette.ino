@@ -1,8 +1,8 @@
 #include <FastLED.h>
 
-#define LED_PIN     5
+#define LED_PIN     10
 #define NUM_LEDS    12
-#define BRIGHTNESS  127
+#define BRIGHTNESS  255
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
 CRGB leds[NUM_LEDS];
@@ -36,7 +36,7 @@ extern const TProgmemPalette16 myRedWhiteBluePalette_p PROGMEM;
 
 
 void setup() {
-    delay( 3000 ); // power-up safety delay
+    delay( 1000 ); // power-up safety delay
     FastLED.addLeds<LED_TYPE, LED_PIN, COLOR_ORDER>(leds, NUM_LEDS).setCorrection( TypicalLEDStrip );
     FastLED.setBrightness(  BRIGHTNESS );
     

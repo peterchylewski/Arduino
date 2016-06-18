@@ -20,7 +20,7 @@ void setup() {
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   display.clearDisplay();   // clears the screen and buffer
-  display.setTextSize(1);
+  display.setTextSize(2);
   display.setTextColor(WHITE);
   display.setCursor(0, 0);
   display.print("FOO");
@@ -29,7 +29,6 @@ void setup() {
 
 void loop() {
 
-  
   
   if (Serial.available() > 0) {
     // get the new byte:
@@ -52,7 +51,6 @@ void loop() {
       Serial.println("OK");
     }
   }
-  
 }
 
 

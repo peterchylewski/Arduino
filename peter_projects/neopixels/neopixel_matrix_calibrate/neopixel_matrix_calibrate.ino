@@ -1,3 +1,5 @@
+// NeoPixel Ring simple sketch (c) 2013 Shae Erisson
+// released under the GPLv3 license to match the rest of the AdaFruit NeoPixel library
 
 
 // --- prepare rotary encoder
@@ -15,7 +17,17 @@ RotaryEncoder encoder(A2, A3);
 #define BUTTON        7
 Button button = Button(BUTTON, PULLUP);
 
-// --- prepare neopixels
+
+// prepare light sensor
+
+#include <Wire.h>
+
+#include <Adafruit_Sensor.h>
+#include "Adafruit_TSL2591.h"
+Adafruit_TSL2591 tsl = Adafruit_TSL2591(2591);
+
+
+// --- prepare neo pixels
 
 #include <Adafruit_NeoPixel.h>
 #ifdef __AVR__
@@ -44,39 +56,50 @@ uint32_t green = pixels.Color(0, 255, 0);
 uint32_t blue = pixels.Color(0, 0, 255);
 uint32_t darkOrange = pixels.Color(204, 61, 0);
 
-struct MyObject {
-  int r;
-  int g;
-  int b;
-};
-
 // -- variuos stuff
 
 int colorMode = 0;
 
 #include <EEPROM.h>
 
+struct MyObject {
+  int r;
+  int g;
+  int b;
+};
+
 void setup() {
-  
   Serial.begin(9600);
+
+  // set light sensor gain etc.
+  tsl.setGain(TSL2591_GAIN_MAX);                
+  tsl.setTiming(TSL2591_INTEGRATIONTIME_100MS);
+
   
   pixels.begin(); // This initializes the NeoPixel library.
 
-  retreiveRGB();
-  setAllPixelsRGB(r, g, b);
-
-  int n = getPixelNum(0, 0);
-  pixels.setPixelColor(n, white);
-
-  n = getPixelNum(3, 2);
-  pixels.setPixelColor(n, white);
-
+  //retreiveRGB();
+  setAllPixelsRGB(0, 0, 0);
   pixels.show();
+  delay(1000);
+
+  
+  
 
 }
 
 void loop() {
 
+  for (int i = 0; i < NUMPIXELS; i++) {
+    setAllPixelsRGB(0, 0, 0);
+    pixels.setPixelColor(i, red);
+    pixels.show();
+    delay(1000);
+    lightSensorAdvancedRead();
+  }
+  
+  //lightSensorAdvancedRead();
+  
   if (button.uniquePress() == true) {
     Serial.println("button.uniquePress");
     ++colorMode;
@@ -222,4 +245,22 @@ void retreiveRGB() {
   r = rgb.r;
   g = rgb.g;
   b = rgb.b;
+}
+
+void lightSensorAdvancedRead(void)
+{
+  // More advanced data read example. Read 32 bits with top 16 bits IR, bottom 16 bits full spectrum
+  // That way you can do whatever math and comparisons you want!
+  uint32_t lum = tsl.getFullLuminosity();
+  uint16_t ir, full;
+  ir = lum >> 16;
+  full = lum & 0xFFFF;
+
+  
+  Serial.print("{\"ir\": "); Serial.print(ir); Serial.print(", ");
+  Serial.print("\"full\": "); Serial.print(full); Serial.print(", ");
+  Serial.print("\"visible\": "); Serial.print(full - ir); Serial.print(", ");
+  Serial.print("\"lux\": "); Serial.print(tsl.calculateLux(full, ir));
+  Serial.println("}");
+  
 }
