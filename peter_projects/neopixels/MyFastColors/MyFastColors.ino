@@ -15,14 +15,14 @@ FASTLED_USING_NAMESPACE
 #error "Requires FastLED 3.1 or later; check github for latest code."
 #endif
 
-#define DATA_PIN    5
+#define DATA_PIN    10
 //#define CLK_PIN   4
 #define LED_TYPE    WS2811
 #define COLOR_ORDER GRB
 #define NUM_LEDS    12
 CRGB leds[NUM_LEDS];
 
-#define BRIGHTNESS          96
+#define BRIGHTNESS          255
 #define FRAMES_PER_SECOND  20
 
 void setup() {
