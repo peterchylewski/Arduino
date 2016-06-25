@@ -7,8 +7,8 @@
   */
 
 int val = -1;
-int encoder0PinA = 5;
-int encoder0PinB = 6;
+int encoder0PinA = 2;
+int encoder0PinB = 3;
 int encoder0PinClick = 4;
 int encoder0Pos = 0;
 int encoder0PinALast = LOW;
@@ -75,7 +75,7 @@ void loop() {
 
   n = digitalRead(encoder0PinA);
   if ((encoder0PinALast == LOW) && (n == HIGH)) {
-    if (digitalRead(encoder0PinB) == LOW) {
+    if (digitalRead(encoder0PinB) == HIGH) {
       encoder0Pos++;
     } else {
       encoder0Pos--;
