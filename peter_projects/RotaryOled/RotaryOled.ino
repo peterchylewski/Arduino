@@ -25,10 +25,16 @@ Adafruit_SSD1306 display(OLED_RESET);
 Encoder myEnc(2, 3);
 //   avoid using pins with LEDs attached
 
-void setup() {
-  Serial.begin(9600);
-  Serial.println("Basic Encoder Test:");
+// -------------- prepare serial 
 
+String inputString = "";
+boolean stringComplete = false;
+
+
+void setup() {
+  Serial.begin(115200);
+  inputString.reserve(200);
+  
   // -------------- setup display
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -45,18 +51,39 @@ void setup() {
 long oldPosition  = -999;
 
 void loop() {
+  
   long newPosition = myEnc.read();
   if (newPosition != oldPosition) {
-    if (newPosition > oldPosition) {
-      Serial.println("UP");
-    } else {
-      Serial.println("DOWN");
-    }
     oldPosition = newPosition;
     Serial.println(newPosition);
     display.clearDisplay();
     display.setCursor(6, 0);
+    display.setTextSize(8);
     display.println(newPosition);
     display.display();
+  }
+
+
+  if (Serial.available() > 0) {
+    // get the new byte:
+    char inChar = (char)Serial.read();
+    // add it to the inputString:
+    inputString += inChar;
+    // if the incoming character is a newline, set a flag
+    // so the main loop can do something about it:
+    if (inChar == '\n') {
+      stringComplete = true;
+      //Serial.println(inputString);
+      display.clearDisplay();
+      display.setCursor(0, 0);
+      display.setTextSize(1);
+      display.print(inputString);
+      display.display();
+
+      inputString = "";
+      stringComplete = false;
+
+      //Serial.println("OK");
+    }
   }
 }
